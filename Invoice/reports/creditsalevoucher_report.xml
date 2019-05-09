@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<odoo>
+  <report id="action_creditsalevoucher_report"
+    string="Credit Sale Voucher"
+    model="invoiceheader.table"
+    report_type="qweb-pdf"
+    name="Invoice.report_creditsalevoucher_template"
+    menu="True"
+    />
+
+    <template id="report_creditsalevoucher_template">
+      <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+          <div class="page">
+            <!-- Report page content -->
+            <t t-foreach="docs" t-as="o">
+              <div class="row">
+                <!-- Data Row Content -->
+                <div class="col-xs-12">
+                  <h2><span t-field="o.cmpny_id" /></h2>
+                  <h4><span t-field="o.cmpny_id.address" /></h4>
+                  <h4>Phone: <span t-field="o.cmpny_id.phone" /></h4>
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-7">
+                  <h5>No. <span t-field="o.invoice_name" /></h5>
+                </div>
+                <div class="col-xs-5">
+                  <h6>Date: <span t-field="o.date" /></h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-7">
+                  <p>M/s: <span t-field="o.cst_id" /></p>
+                </div>
+                <div class="col-xs-5">
+                  <p>Discount : <span t-field="o.discount" /> %</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-7">
+                  <p>CP: <span t-field="o.cp" /></p>
+                </div>
+                <div class="col-xs-5">
+                  <p>Phone: <span t-field="o.cp_phn" /></p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-7">
+                  <p>FU: <span t-field="o.fu" /></p>
+                </div>
+                <div class="col-xs-5">
+                  <p>Phone: <span t-field="o.fu_phn" /></p>
+                </div>
+              </div>
+              <table style="height:100mm;" class="table table-bordered table-condensed" t-if="o.item">
+                <t t-set="i" t-value="1"/>
+                <thead>
+                  <tr class="active" style="border: 3px solid black;">
+                    <th width="5%" style="border: 3px solid black;">Sr#</th>
+                    <th width="20%" style="border: 3px solid black;">Description</th>
+                    <th width="10%" style="border: 3px solid black;">Quantity</th>
+                    <th width="10%" style="border: 3px solid black;">Rate</th>
+                    <th width="15%" style="border: 3px solid black;">Amount</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr t-foreach="o.item.sorted(key=lambda m: m.id)" t-as="move" style="border: 3px solid black;">
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="i"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-field="move.name"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="move.qty"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="move.rate"/>
+                    </td>
+
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-field="move.amount"/>
+                    </td>
+
+
+                    <t t-set="i" t-value="i+1"/>
+
+                  </tr>
+                </tbody>
+              </table>
+
+              <div>
+              <div class="pull-left">
+                <!-- <div>
+                  <span><strong>Sender:</strong></span>
+                </div>
+                <div><![CDATA[&nbsp;]]></div>
+                <div>
+                  <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div>
+                <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+                <div>
+                  <span><strong>Name:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div>
+                <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div> -->
+                <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+                <div>
+                  <span><strong>Recieved by:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div>
+              </div>
+              <div class="pull-right">
+                <div>
+                  <span><strong>Sub Total:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.sub_ttl" /></strong></span>
+                </div>
+                <div>
+                  <span><strong>Discount:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.discount" /> %</strong></span>
+                </div>
+                <div>
+                  <span><strong>Discount Amount:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.discount_amnt" /></strong></span>
+                </div>
+                <div>
+                  <span><strong>Total:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.total" /></strong></span>
+                </div>
+                <div>
+                  <span><strong>Advance:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.advance" /></strong></span>
+                </div>
+                <div>
+                  <span><strong>Remaining Balance:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.balance" /></strong></span>
+                </div>
+                <br></br><br></br>
+                <div>
+                  <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div>
+              </div>
+            </div>
+          </t>
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>

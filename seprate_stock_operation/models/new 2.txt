@@ -1,0 +1,6 @@
+=LEFT(E2,FIND("|",E2)-1)
+
+=SUBSTITUTE(E2,D2,"")
+
+
+=CONCATENATE(F2," ",D2," ",C2)

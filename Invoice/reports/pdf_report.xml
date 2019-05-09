@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<odoo>
+  <report id="action_pdf_report"
+    string="Download Summary Report"
+    model="invoiceheader.table"
+    report_type="qweb-pdf"
+    name="Invoice.report_pdf_template"
+    menu="True"
+    />
+
+    <template id="report_pdf_template">
+      <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+          <div class="page">
+            <!-- Report page content -->
+            <!-- <t t-foreach="docs" t-as="o"> -->
+            <t t-set="sums" t-value='0' />
+              <table style="height:100mm;" class="table table-bordered table-condensed">
+                <t t-set="i" t-value="1"/>
+                <thead>
+                  <tr class="active" style="border: 3px solid black;">
+                    <th width="5%" style="border: 3px solid black;">Sr#</th>
+                    <th width="10%" style="border: 3px solid black;">Ref No.</th>
+                    <th width="10%" style="border: 3px solid black;">Date</th>
+                    <th width="5%" style="border: 3px solid black;">Number of items</th>
+                    <th width="30%" style="border: 3px solid black;">Customer</th>
+                    <th width="30%" style="border: 3px solid black;">Company</th>
+                    <th width="10%" style="border: 3px solid black;">Invoice Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr t-foreach="docs" t-as="o" style="border: 3px solid black;">
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="i"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-field="o.name"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="o.date"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="o.item_size"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:left;">
+                      <span t-esc="o.cst_id.name"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:left;">
+                      <span t-esc="o.cmpny_id.name"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="o.total"/>
+                    </td>
+
+
+                    <t t-set="sums" t-value="sums + o.total"/>
+                    <t t-set="i" t-value="i+1"/>
+
+                  </tr>
+                </tbody>
+              </table>
+              <div>
+              <div class="pull-left">
+
+              </div>
+              <div class="pull-right">
+                <br></br><br></br>
+                <div>
+                  <div>
+                    <span><strong>Grand Total<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-esc="sums" /></strong></span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          <!-- </t> -->
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>

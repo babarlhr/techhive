@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+  <record id="view_form_cashmemoP" model="ir.ui.view">
+    <field name="name">Product Form</field>
+    <field name="model">invoicedetails.table</field>
+    <field name="arch" type="xml">
+      <form>
+        <group name="group_top">
+            <group name="group_left">
+              <field name="name" required='1'/>
+              <field name="type" invisible='1'/>
+              <field name="sed" attrs="{'invisible':[('type','!=','salestaxinvoice')]}"/>
+              <field name="item_description"/>
+            </group>
+            <group name="group_right">
+              <field name="qty"/>
+              <field name="rate"/>
+            </group>
+          </group>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_new_formP" model="ir.actions.act_window.view">
+    <field name="name">Product</field>
+    <field eval="1" name="sequence"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_form_cashmemoP"/>
+    <field name="act_window_id" ref="action_4"/>
+  </record>
+
+  </data>
+</odoo>

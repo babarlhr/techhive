@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <template id="report_picking_2" inherit_id="stock.report_picking">
+		
+           <xpath expr="//div[@class='page']" position="replace">
+				<div class="row">
+                                <div class="col-xs-6">
+									<div t-if="o.picking_type_id.code=='outgoing'">  
+										<span><h3><strong>Outward Gate Pass</strong></h3></span>
+									</div>
+									<div t-if="o.picking_type_id.code=='incoming'">  
+										<span><h1><strong>Inward Gate Pass</strong></h1></span>
+									</div>
+									<div t-if="o.picking_type_id.code=='internal'"> 
+										<span><h1><strong>Internal Transfer Document</strong></h1></span>
+									</div>
+                                </div>
+                            </div>
+                            
+                            <div class="clearfix"/>
+                            <table class="table table-bordered" style="border: 3px solid black;">
+                            <thead>
+                                <tr style="border: 0px solid white;">
+                                    <!--<th t-if="o.origin" style="border: 0px solid white;"><strong>Order (Origin)</strong></th>-->
+									<th style="border: 0px solid white;"><strong>Source Location</strong></th>
+									<td style="border: 0px solid white;">
+										<t t-if="o.move_line_ids">
+                                            <span t-esc="o.location_id.display_name"/>
+										</t>
+									</td>
+									
+									<th style="border: 0px solid white;"><strong>Document No</strong></th>
+									<td style="border: 0px solid white;">
+                                        <span t-field="o.name"/>
+                                    </td>
+									<!--<th t-if="o.picking_type_id.code=='internal'" style="border: 0px solid white;"><strong>Destination Location</strong></th>
+									<th style="border: 0px solid white;"><strong>Store Manager</strong></th>
+									
+									
+                                    <th t-if="o.picking_type_id.code=='outgoing' or o.picking_type_id.code=='internal'" style="border: 0px solid white;"><strong>Dispatch Date</strong></th>
+									<th t-if="o.picking_type_id.code=='incoming'" style="border: 0px solid white;"><strong>Received Date</strong></th>
+									<th style="border: 0px solid white;"><strong>Printing Date</strong></th>
+									<th style="border: 0px solid white;"><strong>State</strong></th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>	
+									<th style="border: 0px solid white;"><strong>Store Manager</strong></th>
+									<td style="border: 0px solid white;">
+										<span t-field="o.create_uid"/>
+									</td>
+									<th style="border: 0px solid white;"><strong>Dispatch Date</strong></th>
+									<td style="border: 0px solid white;">
+                                        <span t-field="o.date"/>
+                                    </td>
+								</tr>
+                                    <!--<td t-if="o.origin">
+                                        <span t-field="o.origin"/>
+                                    </td>-->
+									<!--<td>
+                                        <t t-if="o.move_line_ids">
+                                            <span t-esc="o.location_id.display_name"/>
+										</t>
+									</td>-->
+									<!--<td t-if="o.picking_type_id.code=='internal'">
+                                        <span t-field="o.location_dest_id"/>
+                                    </td>
+									<th style="border: 0px solid white;"><strong>Store Manager</strong></th>
+									<td>
+                                        <span t-field="o.create_uid"/>
+                                    </td>-->
+									<!--<td>
+                                        <span t-field="o.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.date"/>
+                                    </td>
+									<td>
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/> 
+                                    </td>
+									<td>
+                                        <span t-field="o.state"/>
+                                    </td>-->
+								<tr>
+									<th  style="border: 0px solid white;"><strong>Destination Location</strong></th>
+									<td  style="border: 0px solid white;">
+                                        <span t-field="o.location_dest_id"/>
+                                    </td>
+									<th style="border: 0px solid white;"><strong>Printing Date</strong></th>
+									<td style="border: 0px solid white;">
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/> 
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <table class="table table-bordered table-condensed" t-if="o.move_line_ids">
+							  <t t-set="i" t-value="1"/>
+                              <t t-set="has_barcode" t-value="any([move_lines.product_id and move_lines.product_id.sudo().barcode or move_lines.package_id for move_lines in o.move_line_ids])"/>
+                              <t t-set="has_serial_number" t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/>
+							  <thead>
+                                <tr class="active" style="border: 3px solid black;">
+									<th width="5%" style="border: 3px solid black;">Sr#</th>
+									<th width="20%" style="border: 3px solid black;">Category</th>
+									<th width="10%" style="border: 3px solid black;">Model</th>
+									<th width="10%" style="border: 3px solid black;">Part No.</th>
+									<th width="15%" style="border: 3px solid black;">Brand</th>
+                                    <th width="30%" style="border: 3px solid black;">Description</th>
+                                    <th width="10%" style="border: 3px solid black;">Quantity</th>
+                                    <!--<th width="20%" class="text-center">
+                                        <t t-if="has_barcode">Barcode</t>
+                                    </th>-->
+                                    <!--<th width="15%"> 
+                                        <t t-if="o.picking_type_id.code != 'incoming'" align="left">Source</t>
+                                    </th>
+                                    <th width="20%">
+                                        <t t-if="has_serial_number">Lot/Serial Number</t>
+                                    </th>
+                                    <th width="20%" class="text-right">Destination</th>-->
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    <tr t-foreach="o.move_lines.sorted(key=lambda m: m.product_id.id)" t-as="move" style="border: 3px solid black;">
+										<td style="border: 3px solid black;">
+											<span t-esc="i"/>
+										</td>
+										<td style="border: 3px solid black;">
+											<span t-field="move.product_id.categ_id"/>
+										</td>
+										<td style="border: 3px solid black;">
+											<span t-esc="move.product_id.mnfCode"/>
+										</td>
+										<td style="border: 3px solid black;">
+											<span t-esc="move.product_id.mnfpno"/>
+										</td>
+										
+										<td style="border: 3px solid black;">
+											<span t-field="move.product_id.brand"/>
+										</td>
+                                        <td style="border: 3px solid black;">
+                                            <span t-field="move.product_id.display_name"/><br/>
+                                            <span t-field="move.product_id.description_picking"/>
+                                        </td>
+                                        <td style="border: 3px solid black; text-align: right !important;">
+                                            <span t-if="move.product_qty" t-esc="move.product_qty"/>
+                                            <span t-if="not move.product_qty" t-esc="move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')"/>
+                                            <span t-field="move.product_id.uom_id" groups="product.group_uom" />
+                                        </td>
+                                        <!--<td>
+                                            <t t-if="has_barcode">
+                                                <span t-if="move.product_id and move.product_id.barcode">
+                                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', move.product_id.barcode, 600, 100)" style="width:100%;height:50px"/>
+                                                </span>
+                                            </t>
+                                        </td>-->
+										<t t-set="i" t-value="i+1"/>
+                                        
+                                    </tr>
+                              </tbody>
+                            </table>
+                            <table class="table table-condensed" t-if="o.entire_package_ids and o.picking_type_entire_packs">
+                                <thead>
+                                    <tr>
+                                        <th width="25%">Package</th>
+                                        <th width="25%" class="text-center">Barcode</th>
+                                        <th width="25%" class="text-left">Source</th>
+                                        <th width="25%" class="text-right">Destination</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.entire_package_ids.sorted(key=lambda p: p.name)" t-as="package">
+                                        <t t-set="package" t-value="package.with_context({'picking_id':o.id})" />
+                                        <td><span t-field="package.name"/></td>
+                                        <td><img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.name, 600, 100)" style="width:300px    ;height:50px"/></td>
+                                        <td><span t-field="package.current_source_location_id"/></td>
+                                        <td><span t-field="package.current_destination_location_id"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p t-if="o.state in ['draft', 'waiting', 'confirmed']">
+                                You do not have any products reserved for this picking.  Please click the 'Reserve' button
+                                to check if products are available.
+                            </p>
+                            <p t-field="o.note"/>
+							
+							<div>
+								<div class="pull-left">
+									<div>
+										<span><strong>Sender:</strong></span>
+									</div>
+									<div><![CDATA[&nbsp;]]></div>
+									<div>
+										<span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+									</div>
+									<div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+									<div>
+										<span><strong>Name:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+									</div>
+									<div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+									<div>
+										<span><strong>Designation:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+									</div>
+								</div>
+								<div class="pull-right">
+									<div>
+										<span><strong>Receiver:</strong></span>
+									</div>
+									<div><![CDATA[&nbsp;]]></div>
+									<div>
+										<span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+									</div>
+									<div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+									<div>
+										<span><strong>Name:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+									</div>
+									<div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+									<div>
+										<span><strong>Designation:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+									</div>
+								</div>
+							</div>
+					
+			</xpath>
+        </template>
+    </data>
+</odoo>

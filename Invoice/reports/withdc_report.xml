@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<odoo>
+  <report id="action_withdc_report"
+    string="Print Invoice"
+    model="commercialinvoicewithdc.table"
+    report_type="qweb-pdf"
+    name="Invoice.report_withdc_template"
+    menu="True"
+    />
+
+    <template id="report_withdc_template">
+      <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+          <div class="page">
+            <!-- Report page content -->
+            <t t-foreach="docs" t-as="o">
+              <div class="row">
+                <!-- Data Row Content -->
+                <div class="col-xs-12">
+                  <h2><span t-field="o.dc.cmpny_id" /></h2>
+                  <h4><span t-field="o.dc.cmpny_id.address" /> Phone: <span t-field="o.dc.cmpny_id.phone" /></h4>
+                </div>
+              </div>
+              <h2 style="text-align: center;"> COMMERCIAL INVOICE WITH DC </h2>
+              <div class = "row">
+                <div class="col-xs-9">
+                <h5>M/s: <span t-field="o.dc.cst_id" /></h5>
+                </div>
+                <div class="col-xs-3">
+                <h5>No. <span t-field="o.invoice_name" /></h5>
+              </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                <h6>Date: <span t-field="o.dc.date" /></h6>
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-3">
+                <h5>DC# <span t-field="o.dc_no" /></h5>
+                </div>
+                <div class="col-xs-3">
+                <h5>Dated <span t-field="o.dc.dc_dated" /></h5>
+                </div>
+                <div class="col-xs-3">
+                  <h6>P.O.#: <span t-field="o.dc.po" /></h6>
+                </div>
+                  <div class="col-xs-3">
+                    <h6>Dated: <span t-field="o.dc.po_dated" /></h6>
+                  </div>
+                </div>
+
+
+              <table style="height:100mm;" class="table table-bordered table-condensed" t-if="o.dc.item">
+                <t t-set="i" t-value="1"/>
+                <thead>
+                  <tr class="active" style="border: 3px solid black;">
+                    <th width="5%" style="border: 3px solid black;">Sr#</th>
+                    <th width="20%" style="border: 3px solid black;">Description</th>
+                    <th width="10%" style="border: 3px solid black;">Quantity</th>
+                    <th width="10%" style="border: 3px solid black;">Rate</th>
+                    <th width="15%" style="border: 3px solid black;">Amount</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr t-foreach="o.dc.item.sorted(key=lambda m: m.id)" t-as="move" style="border: 3px solid black;">
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="i"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                     <span><strong> <span t-field="move.name"/></strong></span>
+                      <br/>
+                      <span t-field="move.item_description"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="move.qty"/>
+                    </td>
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-esc="move.rate"/>
+                    </td>
+
+                    <td style="border: 3px solid black;text-align:right;">
+                      <span t-field="move.amount"/>
+                    </td>
+
+
+                    <t t-set="i" t-value="i+1"/>
+
+                  </tr>
+                </tbody>
+              </table>
+
+              <div>
+              <div class="pull-left">
+                <!-- <div>
+                  <span><strong>Sender:</strong></span>
+                </div>
+                <div><![CDATA[&nbsp;]]></div>
+                <div>
+                  <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div>
+                <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+                <div>
+                  <span><strong>dc:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div>
+                <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+                <div>
+                  <span><strong>Designation:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div> -->
+                <div>
+                  <span><strong>Amount in Words:</strong></span>
+                </div>
+                <div style="text-transform:capitalize;">
+                  <span><strong><span t-field="o.dc.amnt_in_words" /> only</strong></span>
+                </div>
+              </div>
+              <div class="pull-right">
+                <div>
+                  <span><strong>SUB Total<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.dc.sub_ttl" /></strong></span>
+                </div>
+                <div>
+                  <span><strong>SALES TAX 17%<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.dc.tax_amnt" /></strong></span>
+                </div>
+                <div>
+                  <span><strong>Total<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.dc.total" /></strong></span>
+                </div>
+                <br></br><br></br><br></br><br></br><br></br><br></br>
+                <div>
+                  <span><i>for </i><strong> <span t-field="o.dc.cmpny_id" /></strong></span>
+                </div>
+              </div>
+            </div>
+          </t>
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>

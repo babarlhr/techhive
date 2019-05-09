@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="view_product_template_form_new" model="ir.ui.view">
+       <field name="name">product.template.form</field>
+       <field name="model">product.template</field>
+       <field name="inherit_id" ref="product.product_template_form_view"/>
+       <field name="arch" type="xml">
+           <xpath expr="//field[@name='categ_id']" position="after">
+              <field name="brand"/>
+			  <field name="mnfpno"/>
+			  <field name="mnfCode"/>			  
+           </xpath>
+          </field>
+    </record>
+    
+    <record id="product_brand_action_window" model="ir.actions.act_window">
+        <field name="name">Product Brand</field>
+        <field name="res_model">brand.brand</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree, form</field>
+    </record>
+    
+    <record id="view_product_brand_tree" model="ir.ui.view">
+       <field name="name">product.brand.tree</field>
+       <field name="model">brand.brand</field>
+       <field name="arch" type="xml">
+        <tree editable="top">
+            <field name="name" required="True"/>
+        </tree>
+       </field>
+    </record>
+    
+    <menuitem id="brand_menu"
+       name="Product Brand"
+       parent="stock.menu_product_in_config_stock"
+       sequence="4"
+       action="product_brand_action_window"
+       groups="stock.group_stock_manager,stock.group_stock_user"/>
+    
+</data>
+</odoo>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+  <record id="view_form_DC_task" model="ir.ui.view">
+    <field name="name">Delivery Challan Task Form</field>
+    <field name="model">invoiceheader.table</field>
+    <field name="arch" type="xml">
+      <form duplicate="0" delete="0">
+        <header>
+           <button name="calculate_Total" type="object" string="Calculate Total" class="oe_highlight" />
+           <!-- <button name="generate_invoice" type="object" string="Generate Invoice" class="oe_highlight" /> -->
+        </header>
+        <sheet>
+          <group name="group_top">
+            <group name="group_left">
+              <field name="name" readonly="1"/>
+              <field name="cmpny_id" required="1"/>
+              <field name="po"/>
+              <field name="through"/>
+
+            </group>
+            <group name="group_right">
+              <field name="cst_id" required="1"/>
+              <field name="date"/>
+              <field name="po_dated"/>
+              <field name="tax"/>
+              <field name="status" widget="selection"/>
+              <field name="memotype" invisible='1'/>
+              <!-- <field name="total" readonly="1"/> -->
+            </group>
+          </group>
+          <notebook>
+            <page string="Add items" >
+              <!-- <group name="group_top">
+                <group name="group_left">
+                  <field name="item"/>
+                </group>
+                <group name="group_right">
+                  <field name="qty"/>
+                  <field name="amount"/>
+                </group>
+              </group> -->
+              <tree colors="decoration-muted:is_done==True">
+                <field name="item" context="{'default_type':memotype}"/>
+              </tree>
+              <group>
+                <field name="sub_ttl" readonly="1"/>
+                <field name="tax_amnt" readonly="1"/>
+                <field name="total" readonly="1"/>
+                <field name="view" invisible="1"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_tree_DC" model="ir.ui.view">
+    <field name="name">Delivery Challan Tree</field>
+    <field name="model">invoiceheader.table</field>
+    <field name="arch" type="xml">
+      <tree delete="0" colors="decoration-muted:is_done==True">
+        <field name="name"/>
+        <field name="item"/>
+        <field name="memotype"/>
+        <field name="cst_id"/>
+        <field name="cmpny_id"/>
+        <field name="total" sum='total'/>
+        <!-- <field name="view_total"/> -->
+      </tree>
+
+
+    </field>
+  </record>
+
+  <!-- <record id="view_form_cashmemoP" model="ir.ui.view">
+    <field name="name">Product Form</field>
+    <field name="model">invoicedetails.table</field>
+    <field name="arch" type="xml">
+      <form>
+        <group name="group_top">
+            <group name="group_left">
+              <field name="name"/>
+              <field name="sed_amnt"/>
+            </group>
+            <group name="group_right">
+              <field name="qty"/>
+              <field name="rate"/>
+            </group>
+          </group>
+      </form>
+    </field>
+  </record> -->
+
+  <record id="view_form_DC" model="ir.ui.view">
+    <field name="name">Product Tree</field>
+    <field name="model">invoicedetails.table</field>
+    <field name="arch" type="xml">
+      <tree colors="decoration-muted:is_done==True">
+        <field name="name"/>
+        <field name="qty"/>
+        <field name="rate"/>
+        <field name="amount"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="action_new_tree" model="ir.actions.act_window.view">
+    <field name="name">Delivery Challan</field>
+    <field eval="7" name="sequence"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="view_tree_DC"/>
+    <field name="act_window_id" ref="action_7"/>
+  </record>
+
+  <record id="action_new_form" model="ir.actions.act_window.view">
+    <field name="name">Delivery Challan</field>
+    <field eval="7" name="sequence"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_form_DC_task"/>
+    <field name="act_window_id" ref="action_7"/>
+  </record>
+
+
+
+
+  </data>
+</odoo>

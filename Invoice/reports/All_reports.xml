@@ -1,0 +1,1054 @@
+<?xml version="1.0"?>
+<odoo>
+  <report id="action_cash_memo_report"
+    string="Print Invoice"
+    model="invoiceheader.table"
+    report_type="qweb-pdf"
+    name="Invoice.report_cash_memo_template"
+    menu="True"
+    />
+
+    <template id="report_cash_memo_template">
+      <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+          <div class="page">
+            <!-- Report page content -->
+            <t t-foreach="docs" t-as="o">
+              <div t-if="o.memotype=='cashmemo'">
+			  <h2 style="text-align: center;"> Cash Memo </h2>
+                <div class="row">
+                  <!-- Data Row Content -->
+                  <div class="col-xs-12">
+                    <h2><span t-field="o.cmpny_id" /></h2>
+                    <h4><span t-field="o.cmpny_id.address" /> Phone: <span t-field="o.cmpny_id.phone" /></h4>
+                  </div>
+                </div>
+                <div class = "row">
+                  <div class="col-xs-6">
+                    <h5>No. <span t-field="o.name" /></h5>
+                  </div>
+                  <div class="col-xs-6">
+                    <h6>Date: <span t-field="o.date" /></h6>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12">
+                    <p>M/s: <span t-field="o.cst_id" /></p>
+                  </div>
+                </div>
+                <table class="table table-bordered table-condensed" t-if="o.item">
+                  <t t-set="i" t-value="1"/>
+                  <thead>
+                    <tr class="active" style="border: 3px solid black;">
+                      <th width="5%" style="border: 3px solid black;">Sr#</th>
+                      <th width="50%" style="border: 3px solid black;">Description</th>
+                      <th width="15%" style="border: 3px solid black;">Quantity</th>
+                      <th width="15%" style="border: 3px solid black;">Rate</th>
+                      <th width="15%" style="border: 3px solid black;">Amount</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr t-foreach="o.item.sorted(key=lambda m: m.id)" t-as="move" style="border: 3px solid black;">
+                      <td style="border: 3px solid black;text-align:right;">
+                        <span t-esc="i"/>
+                      </td>
+                      <td style="border: 3px solid black;">
+                      <span t-field="move.item_description"/>
+                    </td>
+                      <td style="border: 3px solid black;text-align:right;">
+                        <span t-esc="move.qty"/>
+                      </td>
+                      <td style="border: 3px solid black;text-align:right;">
+                        <span t-esc="move.rate"/>
+                      </td>
+
+                      <td style="border: 3px solid black;text-align:right;">
+                        <span t-field="move.amount"/>
+                      </td>
+
+
+                      <t t-set="i" t-value="i+1"/>
+
+
+                    </tr>
+                    <div t-if="o.sub_ttl != o.total">
+                    <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>SUB TOTAL</strong></span>
+                  </td>
+                  <td style="border:0;">
+
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+
+                    <span t-field="o.sub_ttl"/>
+
+                  </td>
+
+                    </tr>
+                    </div>
+					 <div t-if="o.discount !=0.00">
+                    <div t-if="o.discount_type == 'Percent'">
+           <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>DISCOUNT</strong></span>
+                  </td>
+                  <td style="border:0;">
+				  <span t-field="o.discount" ></span><span>%</span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.discount_amnt" />
+                  </td>
+                    </tr>
+            </div>
+<div t-if="o.discount_type == 'Flat'">
+            <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>DISCOUNT</strong></span>
+                  </td>
+                  <td style="border:0;">
+                    <span><strong>(Flat)</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.discount"/>
+                  </td>
+                    </tr>
+					</div>
+					</div>
+
+
+           <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:3px solid black;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>TOTAL</strong></span>
+                  </td>
+                  <td style="border:0;">
+
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.total"/>
+                  </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+
+                <div>
+                  <div class="pull-left">
+                    <!-- <div>
+                    <span><strong>Sender:</strong></span>
+                  </div>
+                  <div><![CDATA[&nbsp;]]></div>
+                  <div>
+                  <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div>
+                <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+                <div>
+                <span><strong>Name:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+              </div>
+              <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+              <div>
+              <span><strong>Designation:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+            </div> -->
+          </div>
+          <div class="pull-right">
+            <br></br>
+            <div>
+              <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+           <div class="text-center" style="border-top: 1px solid black;">
+           <strong>For Queries Contact , 0423-7378443-4 </strong><br/>
+           <strong>Pleasure Serving You ! </strong>
+           <ul class="list-inline">
+           <br/>
+                <li><strong>Page:</strong></li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>
+           </div>
+        </div>
+      </div>
+      <div t-if="o.memotype=='creditsalevoucher'">
+	          <h2 style="text-align: center;"> Credit Sales Voucher </h2>
+        <div class="row">
+          <!-- Data Row Content -->
+          <div class="col-xs-8">
+            <h2><span t-field="o.cmpny_id" /></h2>
+            <h4><span t-field="o.cmpny_id.address" /></h4>
+            <h4>Phone: <span t-field="o.cmpny_id.phone" /></h4>
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-7">
+            <h5>No. <span t-field="o.name" /></h5>
+          </div>
+          <div class="col-xs-5">
+            <h6>Date: <span t-field="o.date" /></h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-7">
+            <p>M/s: <span t-field="o.cst_id" /></p>
+          </div>
+		   <div t-if="o.discount !=0.00">
+          <div t-if="o.discount_type == 'Flat'">
+          <div class="col-xs-5">
+            <p>Discount : <span t-field="o.discount" /></p>
+          </div>
+        </div>
+         <div t-if="o.discount_type == 'Percent'">
+          <div class="col-xs-5">
+            <p>Discount : <span t-field="o.discount" /> %</p>
+          </div>
+        </div>
+        </div>
+		</div>
+        <div class="row">
+          <div class="col-xs-7">
+            <p>Contact Person: <span t-field="o.cp" /></p>
+          </div>
+          <div class="col-xs-5">
+            <p>Phone: <span t-field="o.cp_phn" /></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-7">
+            <p>Follow up by: <span t-field="o.fu" /></p>
+          </div>
+          <div class="col-xs-5">
+            <p>Phone: <span t-field="o.fu_phn" /></p>
+          </div>
+        </div>
+        <table  class="table table-bordered table-condensed" t-if="o.item">
+          <t t-set="i" t-value="1"/>
+          <thead>
+            <tr class="active" style="border: 3px solid black;">
+               <th width="5%" style="border: 3px solid black;">Sr#</th>
+               <th width="50%" style="border: 3px solid black;">Description</th>
+               <th width="15%" style="border: 3px solid black;">Quantity</th>
+               <th width="15%" style="border: 3px solid black;">Rate</th>
+               <th width="15%" style="border: 3px solid black;">Amount</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr t-foreach="o.item.sorted(key=lambda m: m.id)" t-as="move" style="border: 3px solid black;">
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-esc="i"/>
+              </td>
+              <td style="border: 3px solid black;">
+                      <span t-field="move.item_description"/>
+                    </td>
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-esc="move.qty"/>
+              </td>
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-esc="move.rate"/>
+              </td>
+
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-field="move.amount"/>
+              </td>
+
+
+              <t t-set="i" t-value="i+1"/>
+
+            </tr>
+
+            <div t-if="o.sub_ttl != o.total">
+            <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>SUB TOTAL</strong></span>
+                  </td>
+                  <td style="border:0;">
+
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.sub_ttl"/>
+                  </td>
+                    </tr>
+            </div>
+					 <div t-if="o.discount !=0.00">
+                    <div t-if="o.discount_type == 'Percent'">
+            <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>DISCOUNT</strong></span>
+                  </td>
+                  <td style="border:0;">
+				  <span t-field="o.discount" ></span><span>%</span>
+
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.discount_amnt" /> 
+                  </td>
+                    </tr>
+            </div>
+<div t-if="o.discount_type == 'Flat'">
+            <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>DISCOUNT</strong></span>
+                  </td>
+                 <td style="border:0;">
+                    <span><strong>(Flat)</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.discount_amnt"/>
+                  </td>
+                    </tr>
+
+</div>
+</div>
+            <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>TOTAL</strong></span>
+                  </td>
+                  <td style="border:0;">
+
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.total"/>
+                  </td>
+                    </tr>
+
+
+            <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>ADVANCE</strong></span>
+                  </td>
+                  <td style="border:0;">
+
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.advance"/>
+                  </td>
+                    </tr>
+
+
+            <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:3px solid black;">
+                       <td style="border:0;">
+                  </td>
+                  <td style="border:0;">
+                         <span><strong>Recieved by:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                        </td>
+                  <td style="border:0;">
+                  <span><strong>REMAINING </strong></span>
+                  </td>
+                  <td style="border:0;">
+                    <span><strong> BALANCE</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.balance"/>
+                  </td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+        <div>
+        <!-- <div class="pull-left">
+          <div>
+            <span><strong>Sender:</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Name:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+        </div>
+        <div class="pull-right">
+
+          <br></br><br></br>
+          <div>
+            <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+        </div> -->
+        <!-- <div t-if="o.item_size  &lt; 3" style="page-break-after:always;">
+        			  <br></br>
+        			  </div> -->
+          <br/><br/>
+        <div class="pull-right">
+          <!-- <div>
+            <span><strong>Sender:</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Name:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+          <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+          <div>
+            <span><strong>Recieved by:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+        </div>
+        <div class="pull-right">
+          <div>
+            <span><strong>Sub Total:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.sub_ttl" /></strong></span>
+          </div>
+          <div>
+            <span><strong>Discount:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.discount" /> %</strong></span>
+          </div>
+          <div>
+            <span><strong>Discount Amount:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.discount_amnt" /></strong></span>
+          </div>
+          <div>
+            <span><strong>Total:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.total" /></strong></span>
+          </div>
+          <div>
+            <span><strong>Advance:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.advance" /></strong></span>
+          </div>
+          <div>
+            <span><strong>Remaining Balance:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.balance" /></strong></span>
+          </div>
+          <br></br><br></br>
+          <div> -->
+
+            <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+
+        </div>
+      </div>
+              <div class="footer">
+           <div class="text-center" style="border-top: 1px solid black;">
+           <strong>For Queries Contact , 0423-7378443-4 </strong><br/>
+           <strong>Pleasure Serving You ! </strong>
+           <ul class="list-inline">
+           <br/>
+                <li><strong>Page:</strong></li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>
+           </div>
+        </div>
+      </div>
+      <div t-if="o.memotype=='commercialinvoice'">
+	  <h2 style="text-align: center;"> COMMERCIAL INVOICE </h2>
+        <div class="row">
+          <!-- Data Row Content -->
+          <div class="col-xs-12">
+            <h2><span t-field="o.cmpny_id" /></h2>
+            <h4><span t-field="o.cmpny_id.address" /> Phone: <span t-field="o.cmpny_id.phone" /></h4>
+          </div>
+        </div>
+
+        <div class = "row">
+          <div class="col-xs-8">
+          <h5>M/s: <span t-field="o.cst_id" /></h5>
+          </div>
+          <div class="col-xs-4">
+          <h5>No. <span t-field="o.name" /></h5>
+
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-4">
+          <h6>Date: <span t-field="o.date" /></h6>
+          </div>
+          <div class="col-xs-4">
+            <h6>P.O.#: <span t-field="o.po" /></h6>
+          </div>
+          <div class="col-xs-4">
+            <h6>Dated: <span t-field="o.po_dated" /></h6>
+          </div>
+        </div>
+		<div class = "row">
+                <div class="col-xs-8">
+                <h6>D.C.# <span t-field="o.dc" /></h6>
+                </div>
+
+                <div class="col-xs-4">
+                  <h6>Dated: <span t-field="o.dc_dated" /></h6>
+                </div>
+              </div>
+
+        <table class="table table-bordered table-condensed" t-if="o.item">
+          <t t-set="i" t-value="1"/>
+          <thead>
+            <tr class="active" style="border: 3px solid black;">
+              <th width="5%" style="border: 3px solid black;">Sr#</th>
+              <th width="55%" style="border: 3px solid black;">Description</th>
+              <th width="10%" style="border: 3px solid black;">Quantity</th>
+              <th width="15%" style="border: 3px solid black;">Rate</th>
+              <th width="15%" style="border: 3px solid black;">Amount</th>
+
+            </tr>
+          </thead>
+          <tbody>
+                    <tr t-foreach="o.item.sorted(key=lambda m: m.id)" t-as="move" style="border: 0;">
+                      <td style="border:3px solid black;text-align:right;">
+                        <span t-esc="i"/>
+                      </td>
+                      <td style="border:3px solid black;">
+                      <span t-field="move.item_description"/>
+                    </td>
+                      <td style="border: 3px solid black;text-align:right;">
+                        <span t-esc="move.qty"/>
+                      </td>
+                      <td style="border: 3px solid black;text-align:right;">
+                        <span t-esc="move.rate"/>
+                      </td>
+
+                      <td style="border: 3px solid black;text-align:right;">
+                        <span t-field="move.amount"/>
+                      </td>
+
+
+                      <t t-set="i" t-value="i+1"/>
+
+
+                    </tr>
+					 <div t-if="o.tax_amnt !=0.00">
+                    <tr style="border-top: 3px solid black;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border-top:3px solid black; border-right:0;border-bottom:0; border-left:0;">
+
+                  </td>
+                  <td style="border-top:3px solid black; border-right:0;border-bottom:0; border-left:0;">
+
+                        </td>
+                  <td style="border-top:3px solid black; border-right:0;border-bottom:0; border-left:0;">
+                  </td>
+                  <td style="border: 3px solid black;border-bottom:0;border-left:0;text-align:left;">
+                    <span><strong>SUB TOTAL</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.sub_ttl"/>
+                  </td>
+                    </tr>
+					</div>
+                    <div t-if="o.tax_amnt !=0.00">
+                    <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+
+                        </td>
+                  <td style="border:0;">
+                  </td>
+                  <td style="border:0;text-align:left;">
+                    <span><strong>SALES TAX 17%</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.tax_amnt"/>
+                  </td>
+                    </tr>
+                    </div>
+                    <div t-if="o.tax_amnt !=0.00">
+                    <tr style="border-bottom: 3px solid black;border-left: 3px solid black;border-right: 3px solid black;border-top:0;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+                  <span><strong>Amount in Words</strong></span>
+                         <div style="text-transform:capitalize;">
+            <span><span t-field="o.amnt_in_words" /> only</span>
+          </div>
+                        </td>
+                  <td style="border:0;">
+                  </td>
+                  <td style="border:0;text-align:left;">
+                    <span><strong>Total</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.total"/>
+                  </td>
+                    </tr>
+					</div>
+					<div t-if="o.tax_amnt ==0.00">
+                    <tr style="border-bottom: 3px solid black;border-left: 3px solid black;border-right: 3px solid black;border-top:3px solid black;">
+                        <td style="border-top:3px solid black; border-right:0;border-bottom:0; border-left:0;">
+
+                  </td>
+                  <td style="border-top:3px solid black; border-right:0;border-bottom:0; border-left:0;">
+                  <span><strong>Amount in Words</strong></span>
+                         <div style="text-transform:capitalize;">
+            <span><span t-field="o.amnt_in_words" /> only</span>
+          </div>
+                        </td>
+                  <td style="border-top:3px solid black; border-right:0;border-bottom:0; border-left:0;">
+                  </td>
+                  <td style="border-top:3px solid black; border-right:0;border-bottom:0; border-left:0;text-align:left;">
+                    <span><strong>Total</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.total"/>
+                  </td>
+                    </tr>
+					</div>
+
+                  </tbody>
+        </table>
+
+        <div>
+        <div class="pull-left">
+          <!-- <div>
+            <span><strong>Sender:</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Name:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Designation:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div> -->
+        </div>
+        <div class="pull-right">
+          <br></br><br></br><br></br>
+          <div>
+            <span><i>for </i><strong> <span t-field="o.cmpny_id" /></strong></span>
+          </div>
+        </div>
+      </div>
+            </div>
+      <div t-if="o.memotype=='salestaxinvoice'">
+        <h2 style="text-align: center;"> SALES-TAX INVOICE </h2>
+        <div class = "row">
+          <div class="col-xs-4">
+          <h5><strong>S.No.</strong> <span t-field="o.name" /></h5>
+          </div>
+           <div class="col-xs-3">
+          <h5><strong>HS Code</strong> <span t-field="o.hs_code" /></h5>
+
+          </div>
+          <div class="col-xs-5">
+          <h5><strong>Date:</strong> <span t-field="o.date" /></h5>
+
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-7">
+          <h5><strong>Terms of Sale:</strong> <span t-field="o.term_sale" /></h5>
+          </div>
+         
+          <div class="col-xs-5">
+          <h5><strong>Time of Supply:</strong> <span t-field="o.time_supply" /></h5>
+
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-7">
+          <h5><strong>Supplier:</strong> <span t-field="o.cmpny_id" /></h5>
+          </div>
+          <div class="col-xs-5">
+          <h5><strong>Buyer:</strong> <span t-field="o.cst_id" /></h5>
+
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-7">
+          <h5><strong>Address:</strong> <span t-field="o.cmpny_id.address" /></h5>
+          </div>
+          <div class="col-xs-5">
+          <h5><strong>Address:</strong> <span t-field="o.cst_id.address" /></h5>
+
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-7">
+          <h5><strong>Ph No.:</strong> <span t-field="o.cmpny_id.phone" /></h5>
+          </div>
+          <div class="col-xs-5">
+          <h5><strong>Ph No.:</strong> <span t-field="o.cst_id.phone" /></h5>
+
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-7">
+          <h5><strong>Sales-Tax No.:</strong> <span t-field="o.cmpny_id.saletax_no" /></h5>
+          </div>
+          <div class="col-xs-5">
+          <h5><strong>Sales-Tax No.:</strong> <span t-field="o.cst_id.saletax_no" /></h5>
+
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-7">
+          <h5><strong>NTN No.:</strong> <span t-field="o.cmpny_id.ntn_no" /></h5>
+          </div>
+          
+          <div class="col-xs-5">
+          <h5><strong>NTN No.:</strong> <span t-field="o.cst_id.ntn_no" /></h5>
+
+          </div>
+        </div>
+       
+        <table style="height:110mm;" class="table table-bordered table-condensed" t-if="o.item">
+          <t t-set="i" t-value="1"/>
+          <thead>
+            <tr class="active" style="border: 3px solid black;">
+              <th width="5%" style="border: 3px solid black;">Quantity</th>
+              <th width="40%" style="border: 3px solid black;">Description</th>
+              <th width="10%" style="border: 3px solid black;">Rate</th>
+              <th width="10%" style="border: 3px solid black;">Amount Excluding S.T And S.E.D. Rs. P</th>
+              <th width="10%" style="border: 3px solid black;">Sales Tax @ 17% Rs. P</th>
+              <th width="10%" style="border: 3px solid black;">S.E.D @_% Rs. P</th>
+              <th width="15%" style="border: 3px solid black;">Amount Including S.T And S.E.D. Rs. P</th>
+
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr t-foreach="o.item" t-as="move" style="border: 0;">
+              <td style="border-top:0;border-left: 3px solid black;border-bottom:0;border-right: 3px solid black;text-align:right;">
+                <span t-esc="move.qty"/>
+              </td>
+              <td style="border-top:0;border-left: 3px solid black;border-bottom:0;border-right: 3px solid black;">
+                  <span t-field="move.item_description"/>
+                    </td>
+
+              <td style="border-top:0;border-left: 3px solid black;border-bottom:0;border-right: 3px solid black;text-align:right;">
+                <span t-esc="move.rate"/>
+              </td>
+
+              <td style="border-top:0;border-left: 3px solid black;border-bottom:0;border-right: 3px solid black;text-align:right;">
+                <span t-esc="move.amount"/>
+              </td>
+              <td style="border-top:0;border-left: 3px solid black;border-bottom:0;border-right: 3px solid black;text-align:right;">
+                <span t-esc="move.sales_tax"/>
+              </td>
+              <td style="border-top:0;border-left: 3px solid black;border-bottom:0;border-right: 3px solid black;text-align:right;">
+                <div t-if="move.sed !=0.00"><span t-esc="move.sed"/></div>
+              </td>
+              <td style="border-top:0;border-left: 3px solid black;border-bottom:0;border-right: 3px solid black;text-align:right;">
+                <span t-esc="move.include_st_sed"/>
+              </td>
+
+            </tr>
+
+            <tr style="border: 3px solid black;">
+            <td style="border-top:3px solid black;border-left: 0;border-bottom:0;border-right: 0;">
+                <span/>
+              </td>
+              <td style="border-top:3px solid black;border-left: 0;border-bottom:0;border-right: 0;">
+                <span/>
+              </td>
+
+              <td style="border-top:3px solid black;border-left: 0;border-bottom:0;border-right: 0;">
+                <span/>Total
+              </td>
+
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-esc="o.exclude_st_sed"/>
+              </td>
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-esc="o.sales_tax"/>
+              </td>
+              <td style="border: 3px solid black;text-align:right;">
+                <div t-if="o.sed !=0.00"><span t-esc="o.sed"/></div>
+              </td>
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-esc="o.include_st_sed"/>
+              </td>
+
+            </tr>
+
+          </tbody>
+        </table>
+<div t-if="o.item_size > 9" style="page-break-after:always;">
+			  <br></br>
+			  </div>
+        <div>
+        <div class="pull-left">
+          <div>
+            <span><strong>Sales Tax<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.sales_tax" /></strong></span>
+          <br/><br/>
+          </div>
+          <div t-if="o.sed !=0.00">
+            <span><strong>S.E.D.<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.sed" /></strong></span>
+          <br/><br/>
+          </div>
+		  <div t-if="o.sed ==0.00">
+            <span><strong>S.E.D.<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______</strong></span>
+          <br/><br/>
+          </div>
+          <div>
+            <span><strong>Net Tax Inclusive Value<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.include_st_sed" /></strong></span>
+          <br/><br/>
+          </div>
+        </div>
+        <div class="pull-right">
+          <div>
+          <br/><br/>
+            <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+            <br/><br/>
+          </div>
+          <div>
+            <span><strong>Name And Designation:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+        </div>
+      </div>
+            </div>
+      <div t-if="o.memotype=='deliverychallan'">
+        <h2 style="text-align: center;"> Delivery Challan </h2>
+        <div class="row">
+          <!-- Data Row Content -->
+          <div class="col-xs-12">
+            <h2><span t-field="o.cmpny_id" /></h2>
+            <h4><span t-field="o.cmpny_id.address" /> Phone: <span t-field="o.cmpny_id.phone" /></h4>
+          </div>
+        </div>
+        <div class = "row">
+          <div class="col-xs-8">
+            <h5>No.<span t-field="o.name" /></h5>
+          </div>
+          <div class="col-xs-4">
+            <h6>Date: <span t-field="o.date" /></h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <p>M/s: <span t-field="o.cst_id" /></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4">
+            <p>PO# <span t-field="o.po" /></p>
+          </div>
+          <div class="col-xs-4">
+            <p>Dated <span t-field="o.po_dated" /></p>
+          </div>
+          <div class="col-xs-4">
+            <p>Through: <span t-field="o.through" /></p>
+          </div>
+        </div>
+        <table class="table table-bordered table-condensed" t-if="o.item">
+          <t t-set="i" t-value="1"/>
+          <thead>
+            <tr class="active" style="border: 3px solid black;">
+              <th width="5%" style="border: 3px solid black;">Sr#</th>
+               <th width="60%" style="border: 3px solid black;">Description</th>
+               <th width="20%" style="border: 3px solid black;">Quantity</th>
+               <th width="15%" style="border: 3px solid black;">Rate</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr t-foreach="o.item.sorted(key=lambda m: m.id)" t-as="move" style="border: 3px solid black;">
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-esc="i"/>
+              </td>
+              <td style="border: 3px solid black;">
+                      <span t-field="move.item_description"/>
+            </td>
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-esc="move.qty"/>
+              </td>
+              <td style="border: 3px solid black;text-align:right;">
+                <span t-if="move.rate > 0">
+                  <span t-esc="move.rate"/>
+                </span>
+              </td>
+
+
+
+              <t t-set="i" t-value="i+1"/>
+
+            </tr>
+            <div t-if="o.tax_amnt !=0.00">
+                    <tr style="border-top: 0;border-left: 3px solid black;border-right: 3px solid black;border-bottom:0;">
+                        <td style="border:0;">
+
+                  </td>
+
+                  <td style="border:0;">
+                  </td>
+                  <td style="border:0;text-align:left;">
+                    <span><strong>SALES TAX 17%</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.tax_amnt"/>
+                  </td>
+                    </tr>
+                    </div>
+
+
+                    <div t-if="o.total !=0.00">
+                    <tr style="border: 3px solid black;">
+                        <td style="border:0;">
+
+                  </td>
+
+                  <td style="border:0;">
+				  <span><strong>Recieved the above in good Condition</strong></span>
+                  </td>
+                  <td style="border:0;text-align:left;">
+                    <span><strong>TOTAL</strong></span>
+                  </td>
+
+                  <td style="border: 3px solid black;text-align:right;">
+                    <span t-field="o.total"/>
+                  </td>
+                    </tr>
+                    </div>
+                    <div t-if="o.total ==0.00">
+                    <tr style="border: 3px solid black;">
+                        <td style="border:0;">
+
+                  </td>
+                  <td style="border:0;">
+                          <span><strong>Recieved the above in good Condition</strong></span>
+                        </td>
+                  <td style="border:0;">
+                  </td>
+
+                  <td style="border:0;">
+                  </td>
+                    </tr>
+					</div>
+          </tbody>
+        </table>
+
+        <div>
+        <div class="pull-left">
+          <!-- <div>
+            <span><strong>Sender:</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Name:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div>
+          <div><![CDATA[&nbsp;]]></div><div><![CDATA[&nbsp;]]></div>
+          <div>
+            <span><strong>Designation:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+          </div> -->
+          <div>
+            <span><strong>Note:</strong></span>
+          </div>
+          <br/>
+          <div>
+            <span>1. We do not undertake any risk of breakage </span>
+          </div>
+           <div>
+            <span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]> or loss of goods in transit when once the </span>
+          </div>
+          <div>
+            <span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]> delivery has been effected. </span>
+          </div>
+
+          <div>
+            <span>2. Octrol/Export Tax or any other Govt. duty </span>
+          </div>
+          <div>
+            <span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]> is on buyer's A/C </span>
+          </div>
+
+        </div>
+        <div class="pull-right">
+          <div>
+            <br></br><br></br>
+            <div>
+              <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+	  <div class="footer">
+           <div class="text-center" style="border-top: 1px solid black;">
+           <strong>For Queries Contact , 0423-7378443-4 </strong><br/>
+           <strong>Pleasure Serving You ! </strong>
+           <ul class="list-inline">
+           <br/>
+                <li><strong>Page:</strong></li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>
+           </div>
+        </div>
+          </div>
+    </t>
+  </div>
+</t>
+</t>
+</template>
+</odoo>

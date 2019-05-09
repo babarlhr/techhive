@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+  <odoo>
+  <!-- Action to open To-do Task list -->
+
+
+    <act_window id="action_customer_task"
+    name="Edit/Create Customer"
+    res_model="customer.table"
+    view_mode="tree,form" />
+
+    <act_window id="action_company_task"
+    name="Edit/Create Company"
+    res_model="company.table"
+    view_mode="tree,form" />
+
+
+    <!-- <act_window id="action_cashmemo_task"
+    name="Cash Memo"
+    res_model="invoiceheader.table"
+    view_mode="tree,form" /> -->
+
+    <record id="action_1" model="ir.actions.act_window">
+      <field name="name">Cash Memo</field>
+      <field name="res_model">invoiceheader.table</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field eval="False" name="view_id"/>
+      <field name="context">{'default_memotype': "cashmemo"}</field>
+      <field name="domain" eval="[('memotype', '=', 'cashmemo')]"/>
+    </record>
+
+    <record id="action_2" model="ir.actions.act_window">
+      <field name="name">Credit Sale Voucher</field>
+      <field name="res_model">invoiceheader.table</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field eval="False" name="view_id"/>
+      <field name="context">{'default_memotype': "creditsalevoucher"}</field>
+      <field name="domain" eval="[('memotype', '=', 'creditsalevoucher')]"/>
+    </record>
+
+    <record id="action_3" model="ir.actions.act_window">
+      <field name="name">All invoice</field>
+      <field name="res_model">invoiceheader.table</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field eval="False" name="view_id"/>
+    </record>
+
+    <record id="action_4" model="ir.actions.act_window">
+      <field name="name">product Form</field>
+      <field name="res_model">invoicedetails.table</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field eval="False" name="view_id"/>
+    </record>
+
+    <record id="action_5" model="ir.actions.act_window">
+      <field name="name">Commercial Invoice</field>
+      <field name="res_model">invoiceheader.table</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field eval="False" name="view_id"/>
+      <field name="context">{'default_memotype': "commercialinvoice"}</field>
+      <field name="domain" eval="[('memotype', '=', 'commercialinvoice')]"/>
+
+    </record>
+
+    <record id="action_6" model="ir.actions.act_window">
+      <field name="name">Sales Tax Invoice</field>
+      <field name="res_model">invoiceheader.table</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field eval="False" name="view_id"/>
+      <field name="context">{'default_memotype': "salestaxinvoice"}</field>
+      <field name="domain" eval="[('memotype', '=', 'salestaxinvoice')]"/>
+
+    </record>
+
+    <record id="action_7" model="ir.actions.act_window">
+    <field name="name">Delivery Challan</field>
+    <field name="res_model">invoiceheader.table</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field eval="False" name="view_id"/>
+    <field name="context">{'default_memotype': "deliverychallan",'default_invoice_name': "DC"}</field>
+    <field name="domain" eval="[('memotype', '=', 'deliverychallan')]"/>
+  </record>
+
+
+    <menuitem id="menu_customer_task"
+    name="Invoice"
+    action="action_3" />
+
+    <menuitem id="Invoices"
+    parent = "menu_customer_task"
+    name="Invoices"
+    sequence="4" />
+
+    <menuitem id="Master"
+    parent = "menu_customer_task"
+    name="Master Data"
+    sequence="1"/>
+
+    <menuitem id="menu_company_task"
+    parent = "Master"
+    name="Create/Edit Company"
+    sequence="2"
+    action="action_company_task" />
+
+    <menuitem id="menu_cashmemo_task"
+    parent = "Invoices"
+    name="Cash Memo"
+    sequence="5"
+    action="action_1" />
+
+    <menuitem id="view_form_Credit_Sale_Voucher_task"
+    parent = "Invoices"
+    name="Credit Sale Voucher"
+    sequence="6"
+    action="action_2" />
+
+    <menuitem id="view_form_Allinvoice"
+    parent = "Master"
+    name="Create/Edit Customer"
+    sequence="3"
+    action="action_customer_task" />
+
+
+
+    <menuitem id="view_form_DeliveryChallan"
+    parent = "Invoices"
+    name="Delivery Challan"
+    sequence="7"
+    action="action_7" />
+
+    <menuitem id="view_form_withoutdc"
+    parent = "Invoices"
+    name="Commercial Invoice"
+    sequence="8"
+    action="action_5" />
+
+    <menuitem id="view_form_salestax"
+    parent = "Invoices"
+    name="Sales Tax Invoice"
+    sequence="9"
+    action="action_6" />
+
+
+
+    <menuitem id="unclickable"
+    parent = "menu_customer_task"
+    name="Reports"
+    sequence="10" />
+
+    <menuitem id="view_form_all"
+    parent = "unclickable"
+    name="Invoice Report"
+    sequence="11"
+    action="action_3" />
+
+  </odoo>

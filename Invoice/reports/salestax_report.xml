@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<odoo>
+  <report id="action_salestax_report"
+    string="Sales Tax Invoice"
+    model="invoiceheader.table"
+    report_type="qweb-pdf"
+    name="Invoice.report_salestax_template"
+    menu="True"
+    />
+
+    <template id="report_salestax_template">
+      <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+          <div class="page">
+            <!-- Report page content -->
+            <t t-foreach="docs" t-as="o">
+              <h2 style="text-align: center;"> SALES-TAX INVOICE </h2>
+              <div class = "row">
+                <div class="col-xs-6">
+                <h5><strong>S.No.</strong> <span t-field="o.id" /></h5>
+                </div>
+                <div class="col-xs-6">
+                <h5><strong>Date:</strong> <span t-field="o.date" /></h5>
+                  
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-6">
+                <h5><strong>Terms of Sale:</strong> <span t-field="o.term_sale" /></h5>
+                </div>
+                <div class="col-xs-6">
+                <h5><strong>Time of Supply:</strong> <span t-field="o.time_supply" /></h5>
+                  
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-6">
+                <h5><strong>Supplier:</strong> <span t-field="o.cmpny_id" /></h5>
+                </div>
+                <div class="col-xs-6">
+                <h5><strong>Buyer:</strong> <span t-field="o.cst_id" /></h5>
+                  
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-6">
+                <h5><strong>Address:</strong> <span t-field="o.cmpny_id.address" /></h5>
+                </div>
+                <div class="col-xs-6">
+                <h5><strong>Address:</strong> <span t-field="o.cst_id.address" /></h5>
+                  
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-6">
+                <h5><strong>Ph No.:</strong> <span t-field="o.cmpny_id.phone" /></h5>
+                </div>
+                <div class="col-xs-6">
+                <h5><strong>Ph No.:</strong> <span t-field="o.cst_id.phone" /></h5>
+                  
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-6">
+                <h5><strong>Sales-Tax No.:</strong> <span t-field="o.cmpny_id.saletax_no" /></h5>
+                </div>
+                <div class="col-xs-6">
+                <h5><strong>Sales-Tax No.:</strong> <span t-field="o.cst_id.saletax_no" /></h5>
+                  
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-6">
+                <h5><strong>NTN No.:</strong> <span t-field="o.cmpny_id.ntn_no" /></h5>
+                </div>
+                <div class="col-xs-6">
+                <h5><strong>NTN No.:</strong> <span t-field="o.cst_id.ntn_no" /></h5>
+                  
+                </div>
+              </div>
+             
+              <table style="height:100mm;" class="table table-bordered table-condensed" t-if="o.item">
+                <t t-set="i" t-value="1"/>
+                <thead>
+                  <tr class="active" style="border: 3px solid black;">
+                    <th width="10%" style="border: 3px solid black;">Quantity</th>
+                    <th width="20%" style="border: 3px solid black;">Description</th>
+                    <th width="10%" style="border: 3px solid black;">Rate</th>
+                    <th width="15%" style="border: 3px solid black;">Amount Excluding S.T And S.E.D. Rs. P</th>
+                    <th width="15%" style="border: 3px solid black;">Sales Tax @ 17% Rs. P</th>
+                    <th width="15%" style="border: 3px solid black;">S.E.D @_% Rs. P</th>
+                    <th width="15%" style="border: 3px solid black;">Amount Including S.T And S.E.D. Rs. P</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr t-foreach="o.item.sorted(key=lambda m: m.id)" t-as="move" style="border: 3px solid black;">
+                    <td style="border: 3px solid black;">
+                      <span t-esc="move.qty"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-field="move.name"/>
+                    </td>
+                    
+                    <td style="border: 3px solid black;">
+                      <span t-esc="move.rate"/>
+                    </td>
+
+                    <td style="border: 3px solid black;">
+                      <span t-esc="move.amount"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-esc="move.sales_tax"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-esc="move.sed"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-esc="move.include_st_sed"/>
+                    </td>
+
+                  </tr>
+                  <tr style="border: 3px solid black;">
+                  <td>
+                      <span/>
+                    </td>
+                    <td>
+                      <span/>
+                    </td>
+                    
+                    <td>
+                      <span/>Total
+                    </td>
+
+                    <td style="border: 3px solid black;">
+                      <span t-esc="o.exclude_st_sed"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-esc="o.sales_tax"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-esc="o.sed"/>
+                    </td>
+                    <td style="border: 3px solid black;">
+                      <span t-esc="o.include_st_sed"/>
+                    </td>
+
+                  </tr>
+                  
+                </tbody>
+              </table>
+
+              <div>
+              <div class="pull-left">
+                <div>
+                  <span><strong>Sales Tax<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.sales_tax" /></strong></span>
+                <br/><br/>
+                </div>
+                <div>
+                  <span><strong>S.E.D.<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.sed" /></strong></span>
+                <br/><br/>
+                </div>
+                <div>
+                  <span><strong>Net Tax Inclusive Value<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="o.include_st_sed" /></strong></span>
+                <br/><br/>
+                </div>
+              </div>
+              <div class="pull-right">
+                <div>
+                <br/><br/>
+                  <span><strong>Signature:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                  <br/><br/>
+                </div>
+                <div>
+                  <span><strong>Name And Designation:<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>_______________</strong></span>
+                </div>
+              </div>
+            </div>
+          </t>
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>
